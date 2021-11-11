@@ -99,17 +99,17 @@ const sketch = ({ context, width, height }) => {
 			const n = random.noise3D(x, y, f * 10, params.freq);
 			const angle = n * Math.PI * params.amp;
 
-			const scale = math.mapRange(n, -1, 1, params.scaleMin, params.scaleMax);
-
 			context.fillStyle = 'white';
 
 			let r = typeData[i * 4 + 0];
 			const g = typeData[i * 4 + 1];
 			const b = typeData[i * 4 + 2];
 			const a = typeData[i * 4 + 3];
-			context.fillStyle = `rgb(${r},${g},${b})`;
-
-			const glyph = 'A';
+			// context.fillStyle = `rgb(${r},${g},${b})`;
+			const redReading = math.mapRange(r, 0, 255, 0, 5);
+			const scale = math.mapRange(n, -1, 1, redReading, params.scaleMax);
+			// const scale = math.mapRange(n, -1, 1, params.scaleMin, params.scaleMax);
+			context.fillStyle = 'white';
 
 			context.save();
 			context.translate(x, y);
@@ -122,7 +122,8 @@ const sketch = ({ context, width, height }) => {
 			context.beginPath();
 			context.moveTo(w * -0.5, 0);
 			context.lineTo(w * 0.5, 0);
-			context.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+			// context.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+			context.strokeStyle = 'white';
 			context.stroke();
 
 			context.restore();

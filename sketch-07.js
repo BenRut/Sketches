@@ -18,7 +18,6 @@ const params = {
 	amp: 0.2,
 	animate: true,
 	frame: 0,
-	lineCap: 'butt',
 };
 
 let manager;
@@ -28,31 +27,31 @@ let text = '';
 let fontSize = 1200;
 let fontFamily = 'serif';
 
-const typeCanvas = document.createElement('canvas');
-const typeContext = typeCanvas.getContext('2d');
+const imageCanvas = document.createElement('canvas');
+const imageContext = imageCanvas.getContext('2d');
 
 const sketch = ({ context, width, height }) => {
-	const cell = 20;
+	const cell = 11;
 	const cols = Math.floor(width / cell);
 	const rows = Math.floor(height / cell);
 	const numCells = cols * rows;
 
-	typeCanvas.width = cols;
-	typeCanvas.height = rows;
+	imageCanvas.width = cols;
+	imageCanvas.height = rows;
 
 	return ({ context, width, height, frame }) => {
 		// fill source square with black
-		typeContext.fillStyle = 'black';
-		typeContext.fillRect(0, 0, cols, rows);
+		imageContext.fillStyle = 'black';
+		imageContext.fillRect(0, 0, cols, rows);
 
 		if (text != '') {
 			// write white font
 			fontSize = cols * 1.2;
-			typeContext.fillStyle = 'white';
-			typeContext.font = `${fontSize}px ${fontFamily}`; // '1200px serif';
-			typeContext.textBaseline = 'top'; //'middle'; //'top';
+			imageContext.fillStyle = 'white';
+			imageContext.font = `${fontSize}px ${fontFamily}`; // '1200px serif';
+			imageContext.textBaseline = 'top'; //'middle'; //'top';
 			// context.textAlign = 'center';
-			const metrics = typeContext.measureText(text);
+			const metrics = imageContext.measureText(text);
 			const mx = metrics.actualBoundingBoxLeft * -1;
 			const my = metrics.actualBoundingBoxAscent * -1;
 			const mw = metrics.actualBoundingBoxLeft + metrics.actualBoundingBoxRight;
@@ -61,22 +60,32 @@ const sketch = ({ context, width, height }) => {
 			const tx = (cols - mw) * 0.5 - mx;
 			const ty = (rows - mh) * 0.5 - my;
 
-			typeContext.save();
+			imageContext.save();
 			// context.translate(width*.5, height*.57);
-			typeContext.translate(tx, ty);
-			// typeContext.beginPath();
-			// typeContext.rect(mx, my, mw, mh);
-			// typeContext.stroke();
-			typeContext.fillText(text, 0, 0);
-			typeContext.restore();
+			imageContext.translate(tx, ty);
+			// imageContext.beginPath();
+			// imageContext.rect(mx, my, mw, mh);
+			// imageContext.stroke();
+			imageContext.fillText(text, 0, 0);
+			imageContext.restore();
 		} else {
 			// write image
-			typeContext.save();
-			typeContext.drawImage(img, 0, 0, img.width, img.height, 0, 0, cols, rows);
-			typeContext.restore();
+			imageContext.save();
+			imageContext.drawImage(
+				img,
+				0,
+				0,
+				img.width,
+				img.height,
+				0,
+				0,
+				cols,
+				rows
+			);
+			imageContext.restore();
 		}
 
-		const typeData = typeContext.getImageData(0, 0, cols, rows).data;
+		const typeData = imageContext.getImageData(0, 0, cols, rows).data;
 
 		// context.fillStyle = (text != '') ? 'black' : 'white';
 		context.fillStyle = 'black';
@@ -102,13 +111,13 @@ const sketch = ({ context, width, height }) => {
 			context.fillStyle = 'white';
 
 			let r = typeData[i * 4 + 0];
-			const g = typeData[i * 4 + 1];
-			const b = typeData[i * 4 + 2];
-			const a = typeData[i * 4 + 3];
+			// const g = typeData[i * 4 + 1];
+			// const b = typeData[i * 4 + 2];
+			// const a = typeData[i * 4 + 3];
 
 			// const radius = math.mapRange(r, 0, 255, 0, 14);
-			const redReading = math.mapRange(r, 0, 255, 0, 9);
-			const radius = math.mapRange(n, -1, 1, redReading, 14);
+			const redReading = math.mapRange(r, 0, 255, 0, 7);
+			const radius = math.mapRange(n, -1, 1, redReading, 7);
 
 			context.fillStyle = 'white';
 
@@ -126,7 +135,7 @@ const sketch = ({ context, width, height }) => {
 		}
 
 		// draw little source canvas in the top left corner
-		// context.drawImage(typeCanvas, 0, 0);
+		// context.drawImage(imageCanvas, 0, 0);
 	};
 };
 
@@ -150,9 +159,9 @@ const createPane = () => {
 	folder.addInput(params, 'frame', { min: 0, max: 999 });
 };
 
-createPane();
+// createPane();
 
-const url = './images/migrant-mother.jpeg';
+const url = './images/bird.jpeg';
 const loadImage = (url) => {
 	return new Promise((resolve, reject) => {
 		const img = new Image();
